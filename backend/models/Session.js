@@ -7,6 +7,7 @@ const sessionSchema = new mongoose.Schema({
   endTime: { type: Date },
   pageUrl: { type: String },
   browserInfo: { type: Object },
+  videoPath: { type: String }, 
   createdAt: { type: Date, default: Date.now },
 });
 

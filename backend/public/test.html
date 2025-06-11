@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SDK Test Page</title>
+  <!-- SDK script served from your backend -->
+   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+   <script src="http://localhost:5000/sdk.js"></script>
+
+  <script src="http://localhost:5000/sdk.js"></script>
+</head>
+<body>
+  <h1>SDK Test</h1>
+
+  <!-- 🧾 Form Section -->
+  <form id="userForm">
+    <label for="name">Name:</label><br />
+    <input type="text" id="name" name="name" /><br /><br />
+
+    <label for="age">Age:</label><br />
+    <input type="number" id="age" name="age" /><br /><br />
+
+    <label for="email">Email:</label><br />
+    <input type="email" id="email" name="email" /><br /><br />
+  </form>
+
+  <!-- 🎬 Recording Control -->
+  <button id="beginAction">Start Recording</button>
+  <button onclick="SessionReplaySDK.startRecording()">Start</button>
+  <button onclick="SessionReplaySDK.stopRecording()">Stop</button>
+
+
+  <script>
+    document.getElementById('beginAction').addEventListener('click', () => {
+      // Start recording
+      console.log('Recording started...');
+      SessionReplaySDK.startRecording();
+
+      // Automatically stop after 20 seconds
+      setTimeout(async () => {
+        console.log('Stopping recording...');
+        const result = await SessionReplaySDK.stopRecording();
+
+        // Make sure result.frames exists
+        if (!result || !result.frames || !Array.isArray(result.frames)) {
+          return alert('No frames captured.');
+        }
+
+        // Send to backend
+        fetch('http://localhost:5000/uploadFrames', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ frames: result.frames })
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log('Upload successful:', data);
+            alert(`✅ Video saved at: ${data.videoPath}`);
+          })
+          .catch((err) => {
+            console.error('Upload failed:', err);
+            alert('❌ Failed to upload frames.');
+          });
+      }, 20000);
+    });
+  </script>
+</body>
+</html>

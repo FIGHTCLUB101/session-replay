@@ -21,7 +21,7 @@ export default function SessionPlayer() {
         })));
         setLoading(false);
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching events:', err);
       }
     };
     fetchEvents();
@@ -33,10 +33,11 @@ export default function SessionPlayer() {
         target: playerRef.current,
         props: {
           events,
+          autoPlay: false,
         },
       });
     }
-  }, [loading]);
+  }, [loading, events]);
 
   return (
     <div>

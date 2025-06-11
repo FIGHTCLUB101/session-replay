@@ -6,7 +6,7 @@ import SessionList from './components/SessionList';
 import SessionPlayer from './components/SessionPlayer';
 import Recorder from './components/Recorder';
 import PrivateRoute from './auth/PrivateRoute';
-
+import Test from './components/Test';
 function App() {
   return (
     <Routes>
@@ -16,6 +16,14 @@ function App() {
       {/* Protected Routes */}
       <Route
         path="/"
+        element={
+          <PrivateRoute>
+            <Test />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/session"
         element={
           <PrivateRoute>
             <SessionList />
